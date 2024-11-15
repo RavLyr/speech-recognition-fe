@@ -2,15 +2,27 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
+type Message = {
+  role: 'User ' | 'Bot';
+  content: string;
+};
 
+type TranscriptContextType = {
+  messages: Message[];
+  addMessage: (message: Message) => void;
+};
 
 const TranscriptContext = createContext<TranscriptContextType | undefined>(undefined);
 
 export const TranscriptProvider = ({ children }: { children: ReactNode }) => {
-  const [transcript, setTranscript] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const addMessage = (message: Message) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  };
 
   return (
-    <TranscriptContext.Provider value={{ transcript, setTranscript }}>
+    <TranscriptContext.Provider value={{ messages, addMessage }}>
       {children}
     </TranscriptContext.Provider>
   );
